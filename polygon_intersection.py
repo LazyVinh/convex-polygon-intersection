@@ -41,13 +41,10 @@ def _get_all_line_intersections(polygon1, polygon2):
 
 def _polygon_contains_point(polygon, point):
     
-    def cross(x, y):
-        return x[1] * y[0] - x[0] * y[1]
-
     for i in range(len(polygon)):
         a = np.subtract(polygon[i], polygon[i-1])
         b = np.subtract(point, polygon[i-1])
-        if cross(b,a) < 0:
+        if np.cross(a,b) < 0:
             return False
     return True
 
@@ -82,7 +79,7 @@ def plot_polygon(polygon):
 if __name__ == '__main__':
 
     polygon1 = _sort_vertices_anti_clockwise_and_remove_duplicates([[np.cos(x), np.sin(x)] for x in np.random.rand(4)*2*np.pi])
-    polygon2 = _sort_vertices_anti_clockwise_and_remove_duplicates([[np.cos(x), np.sin(x)] for x in np.random.rand(3)*2*np.pi])
+    polygon2 = _sort_vertices_anti_clockwise_and_remove_duplicates([[np.cos(x), np.sin(x)] for x in np.random.rand(4)*2*np.pi])
 
     polygon3 = get_intersection_points_of_convex_polygons(polygon1, polygon2)
 
