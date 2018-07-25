@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 def get_intersection_points_of_convex_polygons(polygon1, polygon2):
     polygon3 = list()
     polygon3.extend(_get_vertices_lying_in_the_other_polygon(polygon1, polygon2))
-    polygon3.extend(_get_edge_intersections_points(polygon1, polygon2))
+    polygon3.extend(_get_edge_intersection_points(polygon1, polygon2))
     return _sort_vertices_anti_clockwise_and_remove_duplicates(polygon3)
 
 
@@ -21,7 +21,7 @@ def _get_vertices_lying_in_the_other_polygon(polygon1, polygon2):
     return vertices_lying_in_the_other_polygon
 
 
-def _get_edge_intersections_points(polygon1, polygon2):
+def _get_edge_intersection_points(polygon1, polygon2):
     intersection_points = list()
     for i in range(len(polygon1)):
         edge1 = Edge(polygon1[i-1], polygon1[i])
