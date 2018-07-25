@@ -1,22 +1,16 @@
-from line_segment import LineSegment
+from edge import Edge
 import numpy as np
 import matplotlib.pyplot as plt
 
 
 def get_intersection_points_of_convex_polygons(polygon1, polygon2):
-
-    relevant_vertices = _get_all_vertices_lying_in_the_other_polygon(polygon1, polygon2)
-    
-    line_intersections = _get_all_line_intersections(polygon1, polygon2)
-    
-    intersection_points = list()
-    intersection_points.extend(relevant_vertices)
-    intersection_points.extend(line_intersections)
-    
-    return _sort_vertices_anti_clockwise_and_remove_duplicates(intersection_points)
+    polygon3 = list()
+    polygon3.extend(_get_vertices_lying_in_the_other_polygon(polygon1, polygon2))
+    polygon3.extend(_get_edge_intersections_points(polygon1, polygon2))
+    return _sort_vertices_anti_clockwise_and_remove_duplicates(polygon3)
 
 
-def _get_all_vertices_lying_in_the_other_polygon(polygon1, polygon2):
+def _get_vertices_lying_in_the_other_polygon(polygon1, polygon2):
     vertices_lying_in_the_other_polygon = list()
     for corner in polygon1:
         if _polygon_contains_point(polygon2, corner):
@@ -27,20 +21,19 @@ def _get_all_vertices_lying_in_the_other_polygon(polygon1, polygon2):
     return vertices_lying_in_the_other_polygon
 
 
-def _get_all_line_intersections(polygon1, polygon2):
-    line_intersections = list()
+def _get_edge_intersections_points(polygon1, polygon2):
+    intersection_points = list()
     for i in range(len(polygon1)):
-        line1i = LineSegment(polygon1[i-1], polygon1[i])
+        edge1 = Edge(polygon1[i-1], polygon1[i])
         for j in range(len(polygon2)):
-            line2j = LineSegment(polygon2[j-1], polygon2[j])
-            point = line1i.get_intersection_point(line2j)
-            if point is not None:
-                line_intersections.append(point)
-    return line_intersections
+            edge2 = Edge(polygon2[j-1], polygon2[j])
+            intersection_point = edge1.get_intersection_point(edge2)
+            if intersection_point is not None:
+                intersection_points.append(intersection_point)
+    return intersection_points
 
 
 def _polygon_contains_point(polygon, point):
-    
     for i in range(len(polygon)):
         a = np.subtract(polygon[i], polygon[i-1])
         b = np.subtract(point, polygon[i-1])
@@ -50,13 +43,13 @@ def _polygon_contains_point(polygon, point):
 
 
 def _sort_vertices_anti_clockwise_and_remove_duplicates(polygon, tolerance=1e-7):
-
     polygon = sorted(polygon, key=lambda p: _get_angle_in_radians(_get_inner_point(polygon), p))
 
-    def not_similar_to_previous(l,i):
-        return i==0 or np.linalg.norm(np.subtract(l[i-1],l[i])) > tolerance
+    def vertex_not_similar_to_previous(polygon, i):
+        diff = np.subtract(polygon[i-1], polygon[i])
+        return i==0 or np.linalg.norm(diff, np.inf) > tolerance
 
-    return [p for i, p in enumerate(polygon) if not_similar_to_previous(polygon, i)]
+    return [p for i, p in enumerate(polygon) if vertex_not_similar_to_previous(polygon, i)]
 
 
 def _get_angle_in_radians(p1, p2):
