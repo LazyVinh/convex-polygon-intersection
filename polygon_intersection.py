@@ -3,7 +3,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def get_intersection_points_of_convex_polygons(polygon1, polygon2):
+def intersect(polygon1, polygon2):
+    """
+    The given polygons must be convex and their vertices must be in anti-clockwise order (this is not checked!)
+
+    Example: polygon1 = [[0,0], [0,1], [1,1]]
+
+    """
     polygon3 = list()
     polygon3.extend(_get_vertices_lying_in_the_other_polygon(polygon1, polygon2))
     polygon3.extend(_get_edge_intersection_points(polygon1, polygon2))
@@ -74,7 +80,7 @@ if __name__ == '__main__':
     polygon1 = _sort_vertices_anti_clockwise_and_remove_duplicates([[np.cos(x), np.sin(x)] for x in np.random.rand(4)*2*np.pi])
     polygon2 = _sort_vertices_anti_clockwise_and_remove_duplicates([[np.cos(x), np.sin(x)] for x in np.random.rand(4)*2*np.pi])
 
-    polygon3 = get_intersection_points_of_convex_polygons(polygon1, polygon2)
+    polygon3 = intersect(polygon1, polygon2)
 
     plot_polygon(polygon1)
     plot_polygon(polygon2)
