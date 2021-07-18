@@ -14,8 +14,8 @@ def intersect(polygon1, polygon2):
 
     """
     polygon3 = list()
-    polygon3.extend(_get_vertices_lying_in_the_other_polygon(polygon1, polygon2))
-    polygon3.extend(_get_edge_intersection_points(polygon1, polygon2))
+    polygon3 += _get_vertices_lying_in_the_other_polygon(polygon1, polygon2)
+    polygon3 += _get_edge_intersection_points(polygon1, polygon2)
     return _sort_vertices_anti_clockwise_and_remove_duplicates(polygon3)
 
 
