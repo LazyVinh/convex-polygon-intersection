@@ -48,8 +48,8 @@ def _polygon_contains_point(polygon, point):
 def _sort_vertices_anti_clockwise_and_remove_duplicates(polygon, tolerance=1e-7):
     polygon = sorted(polygon, key=lambda p: _get_angle_in_radians(_get_bounding_box_midpoint(polygon), p))
 
-    def vertex_not_similar_to_previous(polygon, i):
-        diff = np.subtract(polygon[i - 1], polygon[i])
+    def vertex_not_similar_to_previous(_polygon, i):
+        diff = np.subtract(_polygon[i - 1], _polygon[i])
         return np.linalg.norm(diff, np.inf) > tolerance
 
     return [p for i, p in enumerate(polygon) if vertex_not_similar_to_previous(polygon, i)]
