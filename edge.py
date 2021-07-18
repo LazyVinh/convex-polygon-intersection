@@ -1,5 +1,15 @@
 import numpy as np
 
+
+def get_edges(polygon):
+    """
+    :param polygon: a list of points (point = list or tuple holding two numbers)
+    :return: the edges of the polygon, i.e. all pairs of points
+    """
+    for i in range(len(polygon)):
+        yield Edge(polygon[i - 1], polygon[i])
+
+
 class Edge:
     def __init__(self, point_a, point_b):
         self._support_vector = np.array(point_a)
@@ -15,7 +25,7 @@ class Edge:
     def _get_intersection_parameter(self, other):
         A = np.array([-self._direction_vector, other._direction_vector]).T
         if np.linalg.matrix_rank(A) < 2:
-        	return None
+            return None
         b = np.subtract(self._support_vector, other._support_vector)
         x = np.linalg.solve(A, b)
         return x[0] if 0 <= x[0] <= 1 and 0 <= x[1] <= 1 else None

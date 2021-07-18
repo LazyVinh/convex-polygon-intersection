@@ -3,7 +3,7 @@ import random
 import matplotlib.pyplot as plt
 import numpy as np
 
-from edge import Edge
+from edge import get_edges
 
 
 def intersect(polygon1, polygon2):
@@ -20,22 +20,16 @@ def intersect(polygon1, polygon2):
 
 
 def _get_vertices_lying_in_the_other_polygon(polygon1, polygon2):
-    vertices_lying_in_the_other_polygon = list()
-    for corner in polygon1:
-        if _polygon_contains_point(polygon2, corner):
-            vertices_lying_in_the_other_polygon.append(corner)
-    for corner in polygon2:
-        if _polygon_contains_point(polygon1, corner):
-            vertices_lying_in_the_other_polygon.append(corner)
-    return vertices_lying_in_the_other_polygon
+    vertices = list()
+    vertices += [vertex for vertex in polygon1 if _polygon_contains_point(polygon2, vertex)]
+    vertices += [vertex for vertex in polygon2 if _polygon_contains_point(polygon1, vertex)]
+    return vertices
 
 
 def _get_edge_intersection_points(polygon1, polygon2):
     intersection_points = list()
-    for i in range(len(polygon1)):
-        edge1 = Edge(polygon1[i - 1], polygon1[i])
-        for j in range(len(polygon2)):
-            edge2 = Edge(polygon2[j - 1], polygon2[j])
+    for edge1 in get_edges(polygon1):
+        for edge2 in get_edges(polygon2):
             intersection_point = edge1.get_intersection_point(edge2)
             if intersection_point is not None:
                 intersection_points.append(intersection_point)
