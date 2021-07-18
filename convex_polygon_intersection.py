@@ -50,7 +50,7 @@ def _sort_vertices_anti_clockwise_and_remove_duplicates(polygon, tolerance=1e-7)
 
     def vertex_not_similar_to_previous(polygon, i):
         diff = np.subtract(polygon[i - 1], polygon[i])
-        return i == 0 or np.linalg.norm(diff, np.inf) > tolerance
+        return np.linalg.norm(diff, np.inf) > tolerance
 
     return [p for i, p in enumerate(polygon) if vertex_not_similar_to_previous(polygon, i)]
 
