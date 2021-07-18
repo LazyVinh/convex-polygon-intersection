@@ -46,7 +46,7 @@ def _polygon_contains_point(polygon, point):
 
 
 def _sort_vertices_anti_clockwise_and_remove_duplicates(polygon, tolerance=1e-7):
-    polygon = sorted(polygon, key=lambda p: _get_angle_in_radians(_get_inner_point(polygon), p))
+    polygon = sorted(polygon, key=lambda p: _get_angle_in_radians(_get_bounding_box_midpoint(polygon), p))
 
     def vertex_not_similar_to_previous(polygon, i):
         diff = np.subtract(polygon[i - 1], polygon[i])
@@ -55,14 +55,14 @@ def _sort_vertices_anti_clockwise_and_remove_duplicates(polygon, tolerance=1e-7)
     return [p for i, p in enumerate(polygon) if vertex_not_similar_to_previous(polygon, i)]
 
 
-def _get_angle_in_radians(p1, p2):
-    return np.arctan2(p2[1] - p1[1], p2[0] - p1[0])
+def _get_angle_in_radians(point1, point2):
+    return np.arctan2(point2[1] - point1[1], point2[0] - point1[0])
 
 
-def _get_inner_point(polygon):
-    x_coords = [p[0] for p in polygon]
-    y_coords = [p[1] for p in polygon]
-    return [(np.max(x_coords) + np.min(x_coords)) / 2., (np.max(y_coords) + np.min(y_coords)) / 2.]
+def _get_bounding_box_midpoint(polygon):
+    x = [p[0] for p in polygon]
+    y = [p[1] for p in polygon]
+    return [(np.max(x) + np.min(x)) / 2., (np.max(y) + np.min(y)) / 2.]
 
 
 if __name__ == '__main__':
